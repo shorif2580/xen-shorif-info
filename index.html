@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Flash Info Bot - Mini App</title>
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --badge-bg: #eff6ff;
+      --badge-text: #2563eb;
+      --dot-pattern: rgba(100, 116, 139, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #1f2937;
+      --primary: #6366f1;
+      --primary-hover: #818cf8;
+      --badge-bg: #1e1b4b;
+      --badge-text: #a5b4fc;
+      --dot-pattern: rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(var(--dot-pattern) 1px, transparent 1px);
+      background-size: 16px 16px;
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 16px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      position: relative;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.2s;
+    }
+
+    /* Dropdown Menu */
+    .menu-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      width: 220px;
+      padding: 8px;
+      display: none;
+      z-index: 100;
+    }
+
+    .menu-dropdown.show {
+      display: block;
+    }
+
+    .menu-item {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: 0.2s;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: var(--badge-bg);
+      color: var(--primary);
+    }
+
+    /* Search Box */
+    .search-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      max-width: 480px;
+      margin: 10px auto 20px;
+    }
+
+    .search-badge {
+      width: 48px;
+      height: 48px;
+      background: #eff6ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      color: #3b82f6;
+      font-size: 22px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .title span {
+      color: #3b82f6;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text-main);
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+      margin-bottom: 14px;
+    }
+
+    .input-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-search {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+      transition: 0.2s;
+    }
+
+    .btn-search:active {
+      transform: scale(0.98);
+    }
+
+    /* Result Cards */
+    .result-container {
+      display: none;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .profile-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .player-header {
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .player-name {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .player-uid {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .tags-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .stat-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-val {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 4px;
+      color: var(--text-main);
+    }
+
+    .quote-box {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--bg);
+      font-style: italic;
+      font-size: 13px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    /* Section Headings */
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .img-preview {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 30px 0 10px;
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">
+      <div class="brand-icon">🔥</div>
+      <div id="navTitle">Flash Player Info<span>!</span></div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-icon" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="btn-icon" onclick="toggleMenu()">☰</button>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div class="menu-dropdown" id="menuDropdown">
+      <div class="menu-item active" onclick="setMode('player')">👤 Player Info</div>
+      <div class="menu-item" onclick="setMode('career')">📊 Career Stats</div>
+      <div class="menu-item" onclick="setMode('banner')">🖼️ Banner Image</div>
+      <div class="menu-item" onclick="setMode('outfit')">🥋 Outfit Image</div>
+      <div class="menu-item" onclick="setMode('ban')">🛡️ Ban Check</div>
+    </div>
+  </div>
+
+  <!-- Search Card -->
+  <div class="search-card">
+    <div class="search-badge" id="modeIcon">🔥</div>
+    <div class="title" id="modeTitle">Flash Player Info<span>!</span></div>
+    <div class="subtitle" id="modeSubtitle">Enter UID or Name — search Free Fire player instantly</div>
+
+    <input type="text" id="uidInput" class="input-box" placeholder="Enter UID or Name" value="7703449332">
+    <button class="btn-search" onclick="fetchData()" id="searchBtn">
+      <span>🔍 Search</span>
+    </button>
+  </div>
+
+  <!-- Result Container -->
+  <div class="result-container" id="resultBox">
+    
+    <!-- Player Card -->
+    <div class="profile-card">
+      <div class="player-header">
+        <div class="player-name" id="resName">-</div>
+        <div class="player-uid" id="resUid">UID: -</div>
+        <div class="tags-row">
+          <div class="tag" id="resPrime">👑 Prime Lv 4</div>
+          <div class="tag" id="resTitle" style="background:#e0f2fe; color:#0284c7;">Lv. 999</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-label">⭐ Level</div><div class="stat-val" id="resLvl">-</div></div>
+        <div class="stat-item"><div class="stat-label">❤️ Likes</div><div class="stat-val" id="resLikes">-</div></div>
+        <div class="stat-item"><div class="stat-label">🌍 Region</div><div class="stat-val" id="resRegion">-</div></div>
+        <div class="stat-item"><div class="stat-label">📅 Created</div><div class="stat-val" id="resCreated">-</div></div>
+        <div class="stat-item"><div class="stat-label">🚪 Last Login</div><div class="stat-val" id="resLogin">-</div></div>
+        <div class="stat-item"><div class="stat-label">💯 Credit Score</div><div class="stat-val" id="resCredit">-</div></div>
+      </div>
+
+      <div class="quote-box" id="resBio">"Free Fire! Battle in Style!"</div>
+    </div>
+
+    <!-- Battle Stats -->
+    <div class="section-title">🏆 Battle Stats</div>
+    <div class="profile-card">
+      <div class="stats-grid" style="margin-top:0;">
+        <div class="stat-item"><div class="stat-label">BR Rank</div><div class="stat-val" id="resBr">-</div></div>
+        <div class="stat-item"><div class="stat-label">CS Rank</div><div class="stat-val" id="resCs">-</div></div>
+      </div>
+    </div>
+
+    <!-- Images -->
+    <div class="section-title">🖼️ Player Images</div>
+    <img id="bannerImg" class="img-preview" alt="Banner Preview">
+    <img id="outfitImg" class="img-preview" alt="Outfit Preview">
+
+  </div>
+
+  <div class="footer">
+    Fan-made tool. Built by <b>@xen_shorif</b>
+  </div>
+
+  <script>
+    // Initialize Telegram WebApp
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.expand();
+    }
+
+    let currentMode = 'player';
+
+    function toggleTheme() {
+      const body = document.body;
+      const isDark = body.getAttribute('data-theme') === 'dark';
+      body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      document.getElementById('themeBtn').innerText = isDark ? '🌙' : '☀️';
+    }
+
+    function toggleMenu() {
+      document.getElementById('menuDropdown').classList.toggle('show');
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('menuDropdown').classList.remove('show');
+      
+      const title = document.getElementById('modeTitle');
+      const icon = document.getElementById('modeIcon');
+
+      if (mode === 'ban') {
+        title.innerHTML = "Flash Ban Check<span>!</span>";
+        icon.innerText = "🛡️";
+      } else if (mode === 'career') {
+        title.innerHTML = "Flash Career Stats<span>!</span>";
+        icon.innerText = "📊";
+      } else {
+        title.innerHTML = "Flash Player Info<span>!</span>";
+        icon.innerText = "🔥";
+      }
+    }
+
+    async function fetchData() {
+      const input = document.getElementById('uidInput').value.trim();
+      const btn = document.getElementById('searchBtn');
+      const resBox = document.getElementById('resultBox');
+
+      if (!input) return alert("Please enter UID or Name!");
+
+      btn.innerHTML = "<span>⏳ Fetching...</span>";
+      btn.disabled = true;
+
+      try {
+        const param = encodeURIComponent(input);
+        const url = /^\d+$/.test(input) 
+          ? `https://flash-player-info-v1.vercel.app/player-info?uid=${param}`
+          : `https://flash-player-info-v1.vercel.app/player-info?name=${param}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+        const basic = data.basicinfo;
+
+        if (!basic) throw new Error("Player not found!");
+
+        const uid = basic.accountid || input;
+
+        // Fill details
+        document.getElementById('resName').innerText = basic.nickname || 'N/A';
+        document.getElementById('resUid').innerText = `UID: ${uid}`;
+        document.getElementById('resPrime').innerText = `👑 Prime Lv ${basic.primeInfo ? basic.primeInfo.primeLevel : 0}`;
+        document.getElementById('resTitle').innerText = basic.titleName || 'Hero';
+        document.getElementById('resLvl').innerText = basic.level || 0;
+        document.getElementById('resLikes').innerText = (basic.liked || 0).toLocaleString();
+        document.getElementById('resRegion').innerText = basic.region || 'BD';
+        
+        if (basic.createat) {
+          const d = new Date(parseInt(basic.createat) * 1000);
+          document.getElementById('resCreated').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        if (basic.lastloginat) {
+          const d = new Date(parseInt(basic.lastloginat) * 1000);
+          document.getElementById('resLogin').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        document.getElementById('resCredit').innerText = data.creditscoreinfo ? data.creditscoreinfo.creditscore : '100';
+        document.getElementById('resBio').innerText = `"${(data.socialinfo && data.socialinfo.signature) || 'Free Fire! Battle in Style!'}"`;
+        document.getElementById('resBr').innerText = `${basic.br_rank || 'N/A'} (${basic.rankingpoints || 0})`;
+        document.getElementById('resCs').innerText = `${basic.cs_rank || 'N/A'} (${basic.csrankingpoints || 0})`;
+
+        // Set Images
+        document.getElementById('bannerImg').src = `https://flash-player-image-v1.vercel.app/banner-image?uid=${uid}&key=Flash`;
+        document.getElementById('outfitImg').src = `https://flash-player-image-v1.vercel.app/outfit-image?uid=${uid}&key=Flash`;
+
+        resBox.style.display = 'block';
+
+      } catch (err) {
+        alert("Error: " + err.message);
+      } finally {
+        btn.innerHTML = "<span>🔍 Search</span>";
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
