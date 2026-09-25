@@ -3,341 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Flash Info Bot - Mini App</title>
+  <title>Xen Shorif Info - Mini App</title>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
+      --card: #ffffff;
+      --card-border: #f1f5f9;
+      --text: #0f172a;
+      --muted: #64748b;
       --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --badge-bg: #eff6ff;
-      --badge-text: #2563eb;
-      --dot-pattern: rgba(100, 116, 139, 0.12);
+      --primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --badge-gold: #fef3c7;
+      --badge-gold-text: #d97706;
+      --badge-blue: #e0f2fe;
+      --badge-blue-text: #0284c7;
+      --badge-green: #dcfce7;
+      --badge-green-text: #16a34a;
+      --badge-red: #fee2e2;
+      --badge-red-text: #dc2626;
+      --item-bg: #f8fafc;
+      --item-border: #e2e8f0;
+      --dot-color: rgba(148, 163, 184, 0.15);
     }
 
     [data-theme="dark"] {
-      --bg: #0b0f19;
-      --card-bg: #111827;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #1f2937;
+      --bg: #090d16;
+      --card: #111827;
+      --card-border: #1f2937;
+      --text: #f8fafc;
+      --muted: #94a3b8;
       --primary: #6366f1;
-      --primary-hover: #818cf8;
-      --badge-bg: #1e1b4b;
-      --badge-text: #a5b4fc;
-      --dot-pattern: rgba(255, 255, 255, 0.05);
+      --primary-gradient: linear-gradient(135deg, #6366f1, #a855f7);
+      --badge-gold: #451a03;
+      --badge-gold-text: #f59e0b;
+      --badge-blue: #082f49;
+      --badge-blue-text: #38bdf8;
+      --badge-green: #052e16;
+      --badge-green-text: #4ade80;
+      --badge-red: #450a0a;
+      --badge-red-text: #f87171;
+      --item-bg: #0f172a;
+      --item-border: #1e293b;
+      --dot-color: rgba(255, 255, 255, 0.04);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background-color: var(--bg);
-      background-image: radial-gradient(var(--dot-pattern) 1px, transparent 1px);
-      background-size: 16px 16px;
-      color: var(--text-main);
-      min-height: 100vh;
-      padding: 16px;
-      transition: background 0.3s, color 0.3s;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); background-image: radial-gradient(var(--dot-color) 1.5px, transparent 1.5px); background-size: 18px 18px; color: var(--text); min-height: 100vh; padding: 16px; transition: background 0.3s, color 0.3s; }
 
     /* Navbar */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 20px;
-      position: relative;
-    }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; position: relative; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+    .brand-icon { width: 38px; height: 38px; background: var(--primary-gradient); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+    .nav-actions { display: flex; gap: 10px; }
+    .btn-icon { width: 42px; height: 42px; border-radius: 14px; border: 1px solid var(--card-border); background: var(--card); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      font-size: 18px;
-    }
-
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 18px;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--card-bg);
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 18px;
-      transition: 0.2s;
-    }
-
-    /* Dropdown Menu */
-    .menu-dropdown {
-      position: absolute;
-      top: 60px;
-      right: 0;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      border-radius: 16px;
-      width: 220px;
-      padding: 8px;
-      display: none;
-      z-index: 100;
-    }
-
-    .menu-dropdown.show {
-      display: block;
-    }
-
-    .menu-item {
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      border-radius: 10px;
-      cursor: pointer;
-      color: var(--text-main);
-      transition: 0.2s;
-    }
-
-    .menu-item:hover, .menu-item.active {
-      background: var(--badge-bg);
-      color: var(--primary);
-    }
+    /* Dropdown */
+    .dropdown { position: absolute; top: 62px; right: 0; background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; width: 230px; padding: 8px; box-shadow: 0 16px 36px rgba(0,0,0,0.2); display: none; z-index: 1000; }
+    .dropdown.show { display: block; }
+    .drop-item { padding: 11px 14px; font-size: 13.5px; font-weight: 600; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: var(--text); transition: 0.2s; }
+    .drop-item:hover, .drop-item.active { background: var(--item-bg); color: var(--primary); }
 
     /* Search Box */
-    .search-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-      max-width: 480px;
-      margin: 10px auto 20px;
-    }
+    .search-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 26px; padding: 26px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.03); max-width: 460px; margin: 8px auto 20px; }
+    .icon-badge { width: 52px; height: 52px; background: var(--badge-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 24px; color: var(--primary); }
+    .title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .title span { color: #6366f1; }
+    .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .input-box { width: 100%; padding: 15px 18px; border-radius: 16px; border: 1.5px solid var(--card-border); background: var(--item-bg); color: var(--text); font-size: 15px; outline: none; transition: 0.2s; margin-bottom: 12px; font-weight: 600; text-align: center; }
+    .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
+    .btn-search { width: 100%; padding: 15px; border-radius: 16px; border: none; background: var(--primary-gradient); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35); }
+    .btn-search:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    .search-badge {
-      width: 48px;
-      height: 48px;
-      background: #eff6ff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
-      color: #3b82f6;
-      font-size: 22px;
-    }
+    /* Cards */
+    .container { max-width: 480px; margin: 0 auto; display: none; }
+    .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .section-head { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
 
-    .title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
+    /* Player Header */
+    .p-header { text-align: center; padding-bottom: 16px; border-bottom: 1px dashed var(--item-border); }
+    .p-name { font-size: 22px; font-weight: 800; margin-top: 4px; }
+    .p-uid { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; cursor: pointer; display: inline-block; padding: 4px 10px; background: var(--item-bg); border-radius: 8px; }
+    .p-badges { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+    .tag { font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 10px; }
 
-    .title span {
-      color: #3b82f6;
-    }
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .grid-item { background: var(--item-bg); border: 1px solid var(--item-border); border-radius: 16px; padding: 13px; }
+    .g-lbl { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .g-val { font-size: 15px; font-weight: 800; color: var(--text); margin-top: 4px; }
 
-    .subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-    }
+    /* Progress bar */
+    .bar-bg { width: 100%; height: 8px; background: var(--item-border); border-radius: 10px; margin-top: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--primary-gradient); border-radius: 10px; width: 0%; transition: width 0.6s ease; }
 
-    .input-box {
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      background: var(--bg);
-      color: var(--text-main);
-      font-size: 15px;
-      outline: none;
-      transition: 0.2s;
-      margin-bottom: 14px;
-    }
+    .pills-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .pill { font-size: 12px; font-weight: 700; background: var(--item-bg); border: 1px solid var(--item-border); padding: 6px 12px; border-radius: 10px; color: var(--primary); }
 
-    .input-box:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-    }
+    .ep-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--item-bg); border: 1px solid var(--item-border); border-radius: 12px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
+    .ep-owned { background: #dcfce7; color: #15803d; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
 
-    .btn-search {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      border: none;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: #fff;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
-      transition: 0.2s;
-    }
-
-    .btn-search:active {
-      transform: scale(0.98);
-    }
-
-    /* Result Cards */
-    .result-container {
-      display: none;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .profile-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    }
-
-    .player-header {
-      text-align: center;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .player-name {
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .player-uid {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .tags-row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .tag {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
-      background: #fef3c7;
-      color: #d97706;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .stat-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stat-val {
-      font-size: 15px;
-      font-weight: 700;
-      margin-top: 4px;
-      color: var(--text-main);
-    }
-
-    .quote-box {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 12px;
-      background: var(--bg);
-      font-style: italic;
-      font-size: 13px;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    /* Section Headings */
-    .section-title {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin: 20px 0 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .img-preview {
-      width: 100%;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      margin-top: 10px;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin: 30px 0 10px;
-    }
+    .img-box { width: 100%; border-radius: 16px; border: 1px solid var(--card-border); margin-top: 10px; display: block; }
+    .footer { text-align: center; font-size: 12px; color: var(--muted); margin: 30px 0 15px; font-weight: 600; }
   </style>
 </head>
 <body data-theme="light">
@@ -345,75 +114,240 @@
   <!-- Navbar -->
   <div class="navbar">
     <div class="brand">
-      <div class="brand-icon">🔥</div>
-      <div id="navTitle">Flash Player Info<span>!</span></div>
+      <div class="brand-icon">⚡</div>
+      <div id="navBrand">Xen Shorif Info<span>!</span></div>
     </div>
     <div class="nav-actions">
       <button class="btn-icon" onclick="toggleTheme()" id="themeBtn">🌙</button>
-      <button class="btn-icon" onclick="toggleMenu()">☰</button>
+      <button class="btn-icon" onclick="toggleDropdown()">☰</button>
     </div>
 
-    <!-- Dropdown Menu -->
-    <div class="menu-dropdown" id="menuDropdown">
-      <div class="menu-item active" onclick="setMode('player')">👤 Player Info</div>
-      <div class="menu-item" onclick="setMode('career')">📊 Career Stats</div>
-      <div class="menu-item" onclick="setMode('banner')">🖼️ Banner Image</div>
-      <div class="menu-item" onclick="setMode('outfit')">🥋 Outfit Image</div>
-      <div class="menu-item" onclick="setMode('ban')">🛡️ Ban Check</div>
+    <!-- Dropdown Menu (All 9 Bot Features) -->
+    <div class="dropdown" id="dropdownMenu">
+      <div class="drop-item active" onclick="setMode('player')">👤 Player Info</div>
+      <div class="drop-item" onclick="setMode('ban')">🛡️ Ban Check</div>
+      <div class="drop-item" onclick="setMode('item')">📦 Item Asset (PNG)</div>
+      <div class="drop-item" onclick="setMode('guild')">🏰 Guild Information</div>
+      <div class="drop-item" onclick="setMode('duo')">💞 Dynamic Duo Stats</div>
+      <div class="drop-item" onclick="setMode('level')">📊 Level Progress</div>
+      <div class="drop-item" onclick="setMode('banner')">🖼️ Banner Image</div>
+      <div class="drop-item" onclick="setMode('outfit')">🥋 Outfit Image</div>
     </div>
   </div>
 
   <!-- Search Card -->
   <div class="search-card">
-    <div class="search-badge" id="modeIcon">🔥</div>
-    <div class="title" id="modeTitle">Flash Player Info<span>!</span></div>
-    <div class="subtitle" id="modeSubtitle">Enter UID or Name — search Free Fire player instantly</div>
+    <div class="icon-badge" id="mIcon">⚡</div>
+    <div class="title" id="mTitle">Xen Shorif Player Info<span>!</span></div>
+    <div class="subtitle" id="mSub">Enter UID or Name — search Free Fire player instantly</div>
 
     <input type="text" id="uidInput" class="input-box" placeholder="Enter UID or Name" value="7703449332">
-    <button class="btn-search" onclick="fetchData()" id="searchBtn">
-      <span>🔍 Search</span>
+    <button class="btn-search" onclick="handleSearch()" id="btnSearch">
+      <span id="btnText">🔍 Search</span>
     </button>
   </div>
 
-  <!-- Result Container -->
-  <div class="result-container" id="resultBox">
-    
-    <!-- Player Card -->
-    <div class="profile-card">
-      <div class="player-header">
-        <div class="player-name" id="resName">-</div>
-        <div class="player-uid" id="resUid">UID: -</div>
-        <div class="tags-row">
-          <div class="tag" id="resPrime">👑 Prime Lv 4</div>
-          <div class="tag" id="resTitle" style="background:#e0f2fe; color:#0284c7;">Lv. 999</div>
+  <!-- Results Container -->
+  <div class="container" id="container">
+
+    <!-- 1. FULL PLAYER INFO VIEW -->
+    <div id="view-player">
+      <div class="card">
+        <div class="p-header">
+          <div class="p-name" id="pName">-</div>
+          <div class="p-uid" id="pUid" onclick="copyUID()">UID: - 📋</div>
+          <div class="p-badges">
+            <span class="tag" style="background:var(--badge-gold); color:var(--badge-gold-text);" id="pPrime">👑 PRIME Lv 4</span>
+            <span class="tag" style="background:var(--badge-blue); color:var(--badge-blue-text);" id="pTitle">⭐ Lv. 999</span>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="grid-item"><div class="g-lbl">⭐ Level</div><div class="g-val" id="pLvl">-</div></div>
+          <div class="grid-item"><div class="g-lbl">❤️ Likes</div><div class="g-val" id="pLikes">-</div></div>
+          <div class="grid-item"><div class="g-lbl">🌍 Region</div><div class="g-val" id="pRegion">-</div></div>
+          <div class="grid-item"><div class="g-lbl">📅 Created</div><div class="g-val" id="pCreated">-</div></div>
+          <div class="grid-item"><div class="g-lbl">🚪 Last Login</div><div class="g-val" id="pLogin">-</div></div>
+          <div class="grid-item"><div class="g-lbl">💯 Credit Score</div><div class="g-val" id="pCredit">-</div></div>
+          <div class="grid-item"><div class="g-lbl">⚡ Total EXP</div><div class="g-val" id="pExp">-</div></div>
+          <div class="grid-item"><div class="g-lbl">🔑 Version</div><div class="g-val" id="pRelease">OB55</div></div>
+        </div>
+
+        <div style="margin-top: 14px; text-align: center; font-style: italic; color: var(--muted); font-size: 13px;" id="pBio">"Free Fire! Battle in Style!"</div>
+      </div>
+
+      <!-- Battle Stats -->
+      <div class="section-head">🏆 Battle Stats</div>
+      <div class="card">
+        <div class="grid-2" style="margin-top:0;">
+          <div class="grid-item"><div class="g-lbl">BR Rank</div><div class="g-val" id="pBrRank" style="color:var(--primary);">-</div></div>
+          <div class="grid-item"><div class="g-lbl">CS Rank</div><div class="g-val" id="pCsRank" style="color:#0ea5e9;">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Max Rank</div><div class="g-val" id="pMaxRank">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Hippo Rank</div><div class="g-val" id="pHippoRank">-</div></div>
         </div>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-item"><div class="stat-label">⭐ Level</div><div class="stat-val" id="resLvl">-</div></div>
-        <div class="stat-item"><div class="stat-label">❤️ Likes</div><div class="stat-val" id="resLikes">-</div></div>
-        <div class="stat-item"><div class="stat-label">🌍 Region</div><div class="stat-val" id="resRegion">-</div></div>
-        <div class="stat-item"><div class="stat-label">📅 Created</div><div class="stat-val" id="resCreated">-</div></div>
-        <div class="stat-item"><div class="stat-label">🚪 Last Login</div><div class="stat-val" id="resLogin">-</div></div>
-        <div class="stat-item"><div class="stat-label">💯 Credit Score</div><div class="stat-val" id="resCredit">-</div></div>
+      <!-- Avatar & Cosmetics -->
+      <div class="section-head">🎨 Avatar & Cosmetics</div>
+      <div class="card">
+        <div class="grid-2" style="margin-top:0;">
+          <div class="grid-item"><div class="g-lbl">Avatar</div><div class="g-val" id="pAvatar">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Banner</div><div class="g-val" id="pBanner">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Pin</div><div class="g-val" id="pPin">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Badge</div><div class="g-val" id="pBadge">-</div></div>
+        </div>
+        <div style="margin-top: 14px;">
+          <div class="g-lbl">Weapon Skins:</div>
+          <div class="pills-wrap" id="pWeapons"></div>
+        </div>
       </div>
 
-      <div class="quote-box" id="resBio">"Free Fire! Battle in Style!"</div>
+      <!-- Pet Info -->
+      <div class="section-head">🐾 Pet Info</div>
+      <div class="card">
+        <div class="grid-2" style="margin-top:0;">
+          <div class="grid-item"><div class="g-lbl">Pet Name</div><div class="g-val" id="petName">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Level</div><div class="g-val" id="petLvl">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Skill</div><div class="g-val" id="petSkill">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Skin</div><div class="g-val" id="petSkin">-</div></div>
+        </div>
+        <div style="margin-top: 12px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700;">
+            <span class="g-lbl">EXP Progress</span>
+            <span id="petExpTxt">540 / 1000</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="petBar" style="width: 54%;"></div></div>
+        </div>
+      </div>
+
+      <!-- Clan Info -->
+      <div class="section-head">🛡️ Clan Info</div>
+      <div class="card">
+        <div class="grid-2" style="margin-top:0;">
+          <div class="grid-item"><div class="g-lbl">Clan Name</div><div class="g-val" id="clanName">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Clan Level</div><div class="g-val" id="clanLvl">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Members</div><div class="g-val" id="clanMembers">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Captain ID</div><div class="g-val" id="clanCapt">-</div></div>
+        </div>
+      </div>
+
+      <!-- Spark & Diamonds -->
+      <div class="section-head">💎 Credit, Spark & Diamond</div>
+      <div class="card">
+        <div class="grid-2" style="margin-top:0;">
+          <div class="grid-item"><div class="g-lbl">Login Streak</div><div class="g-val" id="pStreak">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Diamond Cost</div><div class="g-val" id="pDiamonds">-</div></div>
+        </div>
+      </div>
+
+      <!-- Elite Pass History -->
+      <div class="section-head">📜 Elite Pass History</div>
+      <div class="card" id="epList" style="max-height: 250px; overflow-y: auto;"></div>
+
+      <!-- Images -->
+      <div class="section-head">🖼️ Player Images</div>
+      <img id="imgBanner" class="img-box" alt="Banner">
+      <img id="imgOutfit" class="img-box" alt="Outfit">
     </div>
 
-    <!-- Battle Stats -->
-    <div class="section-title">🏆 Battle Stats</div>
-    <div class="profile-card">
-      <div class="stats-grid" style="margin-top:0;">
-        <div class="stat-item"><div class="stat-label">BR Rank</div><div class="stat-val" id="resBr">-</div></div>
-        <div class="stat-item"><div class="stat-label">CS Rank</div><div class="stat-val" id="resCs">-</div></div>
+    <!-- 2. BAN CHECK VIEW -->
+    <div id="view-ban" style="display: none;">
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge" id="banIcon" style="font-size: 32px;">🛡️</div>
+        <div class="p-name" id="banNick">-</div>
+        <div class="p-uid" id="banUid">UID: -</div>
+        <div style="margin-top: 16px;">
+          <span class="tag" id="banBadge" style="font-size: 15px; padding: 8px 18px;">Checking...</span>
+        </div>
+        <div class="grid-2" style="margin-top: 20px;">
+          <div class="grid-item"><div class="g-lbl">Region</div><div class="g-val" id="banRegion">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Level</div><div class="g-val" id="banLevel">-</div></div>
+        </div>
+        <div id="banDetails" style="margin-top: 14px; font-size: 13px; color: var(--muted); display: none;"></div>
       </div>
     </div>
 
-    <!-- Images -->
-    <div class="section-title">🖼️ Player Images</div>
-    <img id="bannerImg" class="img-preview" alt="Banner Preview">
-    <img id="outfitImg" class="img-preview" alt="Outfit Preview">
+    <!-- 3. ITEM ASSET VIEW -->
+    <div id="view-item" style="display: none;">
+      <div class="card" style="text-align: center;">
+        <div class="icon-badge">📦</div>
+        <div class="p-name" id="itemTitle">Item Asset Viewer</div>
+        <div class="p-uid" id="itemSub">0xMe FF Resources</div>
+        <div style="margin: 20px auto; max-width: 240px;">
+          <img id="itemAssetImg" class="img-box" style="background:var(--item-bg); padding:15px;" alt="Item Preview">
+        </div>
+        <a id="itemDownloadBtn" class="btn-search" style="text-decoration:none; margin-top:10px;" download="item.png" target="_blank">⬇️ Download Transparent PNG</a>
+      </div>
+    </div>
+
+    <!-- 4. GUILD INFO VIEW -->
+    <div id="view-guild" style="display: none;">
+      <div class="card">
+        <div class="p-header">
+          <div class="p-name" id="gName">-</div>
+          <div class="p-uid" id="gId">ID: -</div>
+          <div class="p-badges">
+            <span class="tag" style="background:var(--badge-blue); color:var(--badge-blue-text);" id="gLvlTag">Clan Level 3</span>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="grid-item"><div class="g-lbl">👥 Members</div><div class="g-val" id="gMembers">-</div></div>
+          <div class="grid-item"><div class="g-lbl">👑 Leader</div><div class="g-val" id="gLeaderName">-</div></div>
+          <div class="grid-item"><div class="g-lbl">🆔 Leader UID</div><div class="g-val" id="gLeaderUid">-</div></div>
+          <div class="grid-item"><div class="g-lbl">⭐ Leader Lv</div><div class="g-val" id="gLeaderLvl">-</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. DUO STATS VIEW -->
+    <div id="view-duo" style="display: none;">
+      <div class="card">
+        <div class="p-header">
+          <div class="p-name">💞 Dynamic Duo & Career</div>
+          <div class="p-uid" id="duoPlayer">Player Stats</div>
+        </div>
+        <div class="grid-2">
+          <div class="grid-item"><div class="g-lbl">🎮 Matches</div><div class="g-val" id="duoMatches">-</div></div>
+          <div class="grid-item"><div class="g-lbl">👑 Wins</div><div class="g-val" id="duoWins">-</div></div>
+          <div class="grid-item"><div class="g-lbl">🎯 Kills</div><div class="g-val" id="duoKills">-</div></div>
+          <div class="grid-item"><div class="g-lbl">💀 K/D Ratio</div><div class="g-val" id="duoKd">-</div></div>
+          <div class="grid-item"><div class="g-lbl">🎯 Headshot Rate</div><div class="g-val" id="duoHs">-</div></div>
+          <div class="grid-item"><div class="g-lbl">💥 Total Damage</div><div class="g-val" id="duoDmg">-</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. LEVEL & PROGRESS VIEW -->
+    <div id="view-level" style="display: none;">
+      <div class="card">
+        <div class="p-header">
+          <div class="p-name" id="lvlName">-</div>
+          <div class="p-uid" id="lvlUid">UID: -</div>
+        </div>
+        <div class="grid-2">
+          <div class="grid-item"><div class="g-lbl">⭐ Level</div><div class="g-val" id="lvlVal">-</div></div>
+          <div class="grid-item"><div class="g-lbl">⚡ Total EXP</div><div class="g-val" id="lvlExp">-</div></div>
+          <div class="grid-item"><div class="g-lbl">❤️ Likes</div><div class="g-val" id="lvlLikes">-</div></div>
+          <div class="grid-item"><div class="g-lbl">🎖 Season Badges</div><div class="g-val" id="lvlBadges">-</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. BANNER VIEW -->
+    <div id="view-banner" style="display: none;">
+      <div class="card" style="text-align:center;">
+        <div class="p-name">🖼️ Player Banner</div>
+        <img id="bannerSoloImg" class="img-box" style="margin-top:15px;" alt="Banner">
+      </div>
+    </div>
+
+    <!-- 8. OUTFIT VIEW -->
+    <div id="view-outfit" style="display: none;">
+      <div class="card" style="text-align:center;">
+        <div class="p-name">🥋 Character Outfit</div>
+        <img id="outfitSoloImg" class="img-box" style="margin-top:15px;" alt="Outfit">
+      </div>
+    </div>
 
   </div>
 
@@ -422,102 +356,351 @@
   </div>
 
   <script>
-    // Initialize Telegram WebApp
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.expand();
     }
 
-    let currentMode = 'player';
+    let activeMode = 'player';
+    const VIEWS = ['player', 'ban', 'item', 'guild', 'duo', 'level', 'banner', 'outfit'];
 
     function toggleTheme() {
-      const body = document.body;
-      const isDark = body.getAttribute('data-theme') === 'dark';
-      body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      const b = document.body;
+      const isDark = b.getAttribute('data-theme') === 'dark';
+      b.setAttribute('data-theme', isDark ? 'light' : 'dark');
       document.getElementById('themeBtn').innerText = isDark ? '🌙' : '☀️';
     }
 
-    function toggleMenu() {
-      document.getElementById('menuDropdown').classList.toggle('show');
+    function toggleDropdown() {
+      document.getElementById('dropdownMenu').classList.toggle('show');
+    }
+
+    function switchView(viewName) {
+      VIEWS.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.style.display = (v === viewName) ? 'block' : 'none';
+      });
     }
 
     function setMode(mode) {
-      currentMode = mode;
-      document.getElementById('menuDropdown').classList.remove('show');
+      activeMode = mode;
+      document.getElementById('dropdownMenu').classList.remove('show');
       
-      const title = document.getElementById('modeTitle');
-      const icon = document.getElementById('modeIcon');
+      const mTitle = document.getElementById('mTitle');
+      const mIcon = document.getElementById('mIcon');
+      const mSub = document.getElementById('mSub');
+      const input = document.getElementById('uidInput');
 
       if (mode === 'ban') {
-        title.innerHTML = "Flash Ban Check<span>!</span>";
-        icon.innerText = "🛡️";
-      } else if (mode === 'career') {
-        title.innerHTML = "Flash Career Stats<span>!</span>";
-        icon.innerText = "📊";
+        mTitle.innerHTML = "Xen Shorif Ban Check<span>!</span>";
+        mIcon.innerText = "🛡️";
+        mSub.innerText = "Check Free Fire player account suspension status";
+        input.placeholder = "Enter UID (e.g. 7703449332)";
+      } else if (mode === 'item') {
+        mTitle.innerHTML = "Item Asset Viewer<span>!</span>";
+        mIcon.innerText = "📦";
+        mSub.innerText = "Enter Item ID to get HD Transparent PNG";
+        input.placeholder = "Enter Item ID (e.g. 907102828)";
+      } else if (mode === 'guild') {
+        mTitle.innerHTML = "Guild Information<span>!</span>";
+        mIcon.innerText = "🏰";
+        mSub.innerText = "Get guild details & captain statistics";
+        input.placeholder = "Enter Player UID or Guild ID";
+      } else if (mode === 'duo') {
+        mTitle.innerHTML = "Dynamic Duo Stats<span>!</span>";
+        mIcon.innerText = "💞";
+        mSub.innerText = "Inspect player duo performance and chemistry";
+        input.placeholder = "Enter UID or Name";
+      } else if (mode === 'level') {
+        mTitle.innerHTML = "Level & EXP Progress<span>!</span>";
+        mIcon.innerText = "📊";
+        mSub.innerText = "View total EXP, level, and badge details";
+        input.placeholder = "Enter UID or Name";
+      } else if (mode === 'banner') {
+        mTitle.innerHTML = "Player Banner Generator<span>!</span>";
+        mIcon.innerText = "🖼️";
+        mSub.innerText = "Generate and preview player banner sticker";
+        input.placeholder = "Enter UID or Name";
+      } else if (mode === 'outfit') {
+        mTitle.innerHTML = "Character Outfit Generator<span>!</span>";
+        mIcon.innerText = "🥋";
+        mSub.innerText = "View equipped character dressup render";
+        input.placeholder = "Enter UID or Name";
       } else {
-        title.innerHTML = "Flash Player Info<span>!</span>";
-        icon.innerText = "🔥";
+        mTitle.innerHTML = "Xen Shorif Player Info<span>!</span>";
+        mIcon.innerText = "⚡";
+        mSub.innerText = "Enter UID or Name — search Free Fire player instantly";
+        input.placeholder = "Enter UID or Name";
       }
     }
 
-    async function fetchData() {
+    function copyUID() {
+      const u = document.getElementById('uidInput').value.trim();
+      navigator.clipboard.writeText(u);
+      alert("UID Copied: " + u);
+    }
+
+    async function handleSearch() {
       const input = document.getElementById('uidInput').value.trim();
-      const btn = document.getElementById('searchBtn');
-      const resBox = document.getElementById('resultBox');
+      const btn = document.getElementById('btnSearch');
+      const btnText = document.getElementById('btnText');
+      const container = document.getElementById('container');
 
-      if (!input) return alert("Please enter UID or Name!");
+      if (!input) return alert("Please enter UID, Name, or Item ID!");
 
-      btn.innerHTML = "<span>⏳ Fetching...</span>";
       btn.disabled = true;
+      btnText.innerText = "⏳ Fetching...";
 
       try {
-        const param = encodeURIComponent(input);
-        const url = /^\d+$/.test(input) 
-          ? `https://flash-player-info-v1.vercel.app/player-info?uid=${param}`
-          : `https://flash-player-info-v1.vercel.app/player-info?name=${param}`;
-
-        const res = await fetch(url);
-        const data = await res.json();
-        const basic = data.basicinfo;
-
-        if (!basic) throw new Error("Player not found!");
-
-        const uid = basic.accountid || input;
-
-        // Fill details
-        document.getElementById('resName').innerText = basic.nickname || 'N/A';
-        document.getElementById('resUid').innerText = `UID: ${uid}`;
-        document.getElementById('resPrime').innerText = `👑 Prime Lv ${basic.primeInfo ? basic.primeInfo.primeLevel : 0}`;
-        document.getElementById('resTitle').innerText = basic.titleName || 'Hero';
-        document.getElementById('resLvl').innerText = basic.level || 0;
-        document.getElementById('resLikes').innerText = (basic.liked || 0).toLocaleString();
-        document.getElementById('resRegion').innerText = basic.region || 'BD';
-        
-        if (basic.createat) {
-          const d = new Date(parseInt(basic.createat) * 1000);
-          document.getElementById('resCreated').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        if (activeMode === 'ban') {
+          await runBanCheck(input);
+        } else if (activeMode === 'item') {
+          await runItemSearch(input);
+        } else if (activeMode === 'guild') {
+          await runGuildCheck(input);
+        } else if (activeMode === 'duo') {
+          await runDuoCheck(input);
+        } else if (activeMode === 'level') {
+          await runLevelCheck(input);
+        } else if (activeMode === 'banner') {
+          await runBannerCheck(input);
+        } else if (activeMode === 'outfit') {
+          await runOutfitCheck(input);
+        } else {
+          await runPlayerInfo(input);
         }
-        if (basic.lastloginat) {
-          const d = new Date(parseInt(basic.lastloginat) * 1000);
-          document.getElementById('resLogin').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-        }
-
-        document.getElementById('resCredit').innerText = data.creditscoreinfo ? data.creditscoreinfo.creditscore : '100';
-        document.getElementById('resBio').innerText = `"${(data.socialinfo && data.socialinfo.signature) || 'Free Fire! Battle in Style!'}"`;
-        document.getElementById('resBr').innerText = `${basic.br_rank || 'N/A'} (${basic.rankingpoints || 0})`;
-        document.getElementById('resCs').innerText = `${basic.cs_rank || 'N/A'} (${basic.csrankingpoints || 0})`;
-
-        // Set Images
-        document.getElementById('bannerImg').src = `https://flash-player-image-v1.vercel.app/banner-image?uid=${uid}&key=Flash`;
-        document.getElementById('outfitImg').src = `https://flash-player-image-v1.vercel.app/outfit-image?uid=${uid}&key=Flash`;
-
-        resBox.style.display = 'block';
-
+        container.style.display = 'block';
       } catch (err) {
-        alert("Error: " + err.message);
+        alert("Action Failed: " + err.message);
       } finally {
-        btn.innerHTML = "<span>🔍 Search</span>";
         btn.disabled = false;
+        btnText.innerText = "🔍 Search";
       }
+    }
+
+    // 1. BAN CHECK
+    async function runBanCheck(target) {
+      switchView('ban');
+      const res = await fetch(`https://flash-player-info-v1.vercel.app/bancheck?uid=${encodeURIComponent(target)}`);
+      const data = await res.json();
+
+      document.getElementById('banNick').innerText = data.Nickname || target;
+      document.getElementById('banUid').innerText = `UID: ${data.UID || target}`;
+      document.getElementById('banRegion').innerText = data.Region || 'BD';
+      document.getElementById('banLevel').innerText = data.level || 'N/A';
+
+      const badge = document.getElementById('banBadge');
+      const icon = document.getElementById('banIcon');
+      const details = document.getElementById('banDetails');
+
+      if (data.is_banned) {
+        badge.style.background = "var(--badge-red)";
+        badge.style.color = "var(--badge-red-text)";
+        badge.innerText = `🚨 BANNED (${data.ban_status || 'Temporarily'})`;
+        icon.innerText = "🚨";
+        details.style.display = "block";
+        details.innerHTML = `<b>Period Remaining:</b> ${data.period || 'N/A'}`;
+      } else {
+        badge.style.background = "var(--badge-green)";
+        badge.style.color = "var(--badge-green-text)";
+        badge.innerText = "✅ CLEAN / NOT BANNED";
+        icon.innerText = "🛡️";
+        details.style.display = "none";
+      }
+    }
+
+    // 2. ITEM ASSET
+    async function runItemSearch(itemId) {
+      switchView('item');
+      const cdnUrl = `https://0xme.github.io/ff-resources/pngs/300x300/${itemId}.png`;
+      const img = document.getElementById('itemAssetImg');
+      const btn = document.getElementById('itemDownloadBtn');
+      
+      img.src = cdnUrl;
+      btn.href = cdnUrl;
+      document.getElementById('itemTitle').innerText = `Item ID: ${itemId}`;
+    }
+
+    // 3. GUILD INFO
+    async function runGuildCheck(target) {
+      switchView('guild');
+      const isNum = /^\d+$/.test(target);
+      const url = isNum 
+        ? `https://flash-player-info-v1.vercel.app/player-info?uid=${encodeURIComponent(target)}`
+        : `https://flash-player-info-v1.vercel.app/player-info?name=${encodeURIComponent(target)}`;
+      
+      const res = await fetch(url);
+      const data = await res.json();
+      const clan = data.clanbasicinfo || {};
+      const capt = data.captainbasicinfo || {};
+
+      document.getElementById('gName').innerText = clan.clanname || 'None';
+      document.getElementById('gId').innerText = `ID: ${clan.clanid || 'N/A'}`;
+      document.getElementById('gLvlTag').innerText = `Clan Level ${clan.clanlevel || 0}`;
+      document.getElementById('gMembers').innerText = `${clan.membernum || 0} / ${clan.capacity || 40}`;
+      document.getElementById('gLeaderName').innerText = capt.nickname || 'N/A';
+      document.getElementById('gLeaderUid').innerText = capt.accountid || 'N/A';
+      document.getElementById('gLeaderLvl').innerText = `Lv ${capt.level || 0} (${capt.liked || 0} Likes)`;
+    }
+
+    // 4. DUO STATS
+    async function runDuoCheck(target) {
+      switchView('duo');
+      const isNum = /^\d+$/.test(target);
+      const url = isNum
+        ? `https://flash-player-info-v1.vercel.app/stats/CAREER/br?uid=${encodeURIComponent(target)}`
+        : `https://flash-player-info-v1.vercel.app/stats/CAREER/br?name=${encodeURIComponent(target)}`;
+      
+      const res = await fetch(url);
+      const data = await res.json();
+      const duo = data.duostats || {};
+      const d = duo.detailedstats || {};
+
+      const played = duo.gamesplayed || 0;
+      const wins = duo.wins || 0;
+      const kills = duo.kills || 0;
+      const deaths = d.deaths || 0;
+      const hs = d.headshotKills || 0;
+
+      document.getElementById('duoPlayer').innerText = `Player: ${target}`;
+      document.getElementById('duoMatches').innerText = played.toLocaleString();
+      document.getElementById('duoWins').innerText = `${wins.toLocaleString()} (${played ? Math.round((wins/played)*100) : 0}%)`;
+      document.getElementById('duoKills').innerText = kills.toLocaleString();
+      document.getElementById('duoKd').innerText = deaths ? (kills/deaths).toFixed(2) : kills;
+      document.getElementById('duoHs').innerText = `${kills ? Math.round((hs/kills)*100) : 0}% (${hs})`;
+      document.getElementById('duoDmg').innerText = (d.damage || 0).toLocaleString();
+    }
+
+    // 5. LEVEL PROGRESS
+    async function runLevelCheck(target) {
+      switchView('level');
+      const isNum = /^\d+$/.test(target);
+      const url = isNum 
+        ? `https://flash-player-info-v1.vercel.app/player-info?uid=${encodeURIComponent(target)}`
+        : `https://flash-player-info-v1.vercel.app/player-info?name=${encodeURIComponent(target)}`;
+      
+      const res = await fetch(url);
+      const data = await res.json();
+      const b = data.basicinfo || {};
+
+      document.getElementById('lvlName').innerText = b.nickname || 'N/A';
+      document.getElementById('lvlUid').innerText = `UID: ${b.accountid || target}`;
+      document.getElementById('lvlVal').innerText = `Level ${b.level || 0}`;
+      document.getElementById('lvlExp').innerText = (b.exp || 0).toLocaleString();
+      document.getElementById('lvlLikes').innerText = (b.liked || 0).toLocaleString();
+      document.getElementById('lvlBadges').innerText = b.badgecnt || 0;
+    }
+
+    // 6. BANNER ONLY
+    async function runBannerCheck(target) {
+      switchView('banner');
+      const isNum = /^\d+$/.test(target);
+      const param = isNum ? `uid=${encodeURIComponent(target)}` : `name=${encodeURIComponent(target)}`;
+      document.getElementById('bannerSoloImg').src = `https://flash-player-image-v1.vercel.app/banner-image?${param}&key=Flash`;
+    }
+
+    // 7. OUTFIT ONLY
+    async function runOutfitCheck(target) {
+      switchView('outfit');
+      const isNum = /^\d+$/.test(target);
+      const param = isNum ? `uid=${encodeURIComponent(target)}` : `name=${encodeURIComponent(target)}`;
+      document.getElementById('outfitSoloImg').src = `https://flash-player-image-v1.vercel.app/outfit-image?${param}&key=Flash`;
+    }
+
+    // 8. FULL PLAYER INFO
+    async function runPlayerInfo(target) {
+      switchView('player');
+      const isNum = /^\d+$/.test(target);
+      const url = isNum 
+        ? `https://flash-player-info-v1.vercel.app/player-info?uid=${encodeURIComponent(target)}`
+        : `https://flash-player-info-v1.vercel.app/player-info?name=${encodeURIComponent(target)}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+      const b = data.basicinfo;
+
+      if (!b) throw new Error("Player data not found!");
+      const uid = b.accountid || target;
+
+      // Header
+      document.getElementById('pName').innerText = b.nickname || 'N/A';
+      document.getElementById('pUid').innerText = `UID: ${uid} 📋`;
+      document.getElementById('pPrime').innerText = `👑 PRIME Lv ${b.primeInfo ? b.primeInfo.primeLevel : 0}`;
+      document.getElementById('pTitle').innerText = b.titleName || 'Lv. 999';
+
+      // Stats
+      document.getElementById('pLvl').innerText = b.level || 0;
+      document.getElementById('pLikes').innerText = (b.liked || 0).toLocaleString();
+      document.getElementById('pRegion').innerText = b.region || 'BD';
+      
+      if (b.createat) {
+        const d = new Date(parseInt(b.createat) * 1000);
+        document.getElementById('pCreated').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+      if (b.lastloginat) {
+        const d = new Date(parseInt(b.lastloginat) * 1000);
+        document.getElementById('pLogin').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+
+      document.getElementById('pCredit').innerText = data.creditscoreinfo ? data.creditscoreinfo.creditscore : '100';
+      document.getElementById('pExp').innerText = (b.exp || 0).toLocaleString();
+      document.getElementById('pRelease').innerText = b.releaseversion || 'OB55';
+      document.getElementById('pBio').innerText = `"${(data.socialinfo && data.socialinfo.signature) || 'Free Fire! Battle in Style!'}"`;
+
+      // Battle Stats
+      document.getElementById('pBrRank').innerText = `${b.br_rank || 'N/A'} (${b.rankingpoints || 0})`;
+      document.getElementById('pCsRank').innerText = `${b.cs_rank || 'N/A'} (${b.csrankingpoints || 0})`;
+      document.getElementById('pMaxRank').innerText = `${b.maxrank || 'N/A'} (CS: ${b.csmaxrank || 'N/A'})`;
+      document.getElementById('pHippoRank').innerText = `#${b.hipporank || 0}`;
+
+      // Cosmetics
+      document.getElementById('pAvatar').innerText = b.avatarName || 'Default';
+      document.getElementById('pBanner').innerText = b.bannerName || 'Default';
+      document.getElementById('pPin').innerText = b.pinName || 'None';
+      document.getElementById('pBadge').innerText = b.badgeName || 'Mystery';
+
+      // Weapons
+      const wWrap = document.getElementById('pWeapons');
+      wWrap.innerHTML = '';
+      (b.weaponskinshowsName || []).forEach(w => {
+        wWrap.innerHTML += `<span class="pill">${w}</span>`;
+      });
+
+      // Pet
+      const pet = data.petinfo || {};
+      document.getElementById('petName').innerText = pet.idName || 'None';
+      document.getElementById('petLvl').innerText = pet.level || 0;
+      document.getElementById('petSkill').innerText = pet.selectedSkillName || 'N/A';
+      document.getElementById('petSkin').innerText = pet.skinName || 'Default';
+      document.getElementById('petExpTxt').innerText = `${pet.exp || 0} / 1000`;
+      document.getElementById('petBar').style.width = `${Math.min(100, (pet.exp || 0) / 10)}%`;
+
+      // Clan
+      const clan = data.clanbasicinfo || {};
+      document.getElementById('clanName').innerText = clan.clanname || 'None';
+      document.getElementById('clanLvl').innerText = clan.clanlevel || 0;
+      document.getElementById('clanMembers').innerText = `${clan.membernum || 0} / ${clan.capacity || 40}`;
+      document.getElementById('clanCapt').innerText = clan.captainid || 'N/A';
+
+      // Spark & Diamonds
+      const spark = data.collabSparkInfo || {};
+      document.getElementById('pStreak').innerText = `${spark.loginStreakDays || 0} Days`;
+      document.getElementById('pDiamonds').innerText = `${data.diamondcostres ? data.diamondcostres.diamondcost : 0} 💎`;
+
+      // Pass history
+      const epWrap = document.getElementById('epList');
+      epWrap.innerHTML = '';
+      (data.historyepinfo || []).slice(0, 10).forEach(ep => {
+        epWrap.innerHTML += `
+          <div class="ep-item">
+            <span>#${ep.epeventid || 'EP'} • Badges: ${ep.badgecnt || 0}/100</span>
+            ${ep.ownedpass ? '<span class="ep-owned">OWNED</span>' : ''}
+          </div>
+        `;
+      });
+
+      // Images
+      document.getElementById('imgBanner').src = `https://flash-player-image-v1.vercel.app/banner-image?uid=${uid}&key=Flash`;
+      document.getElementById('imgOutfit').src = `https://flash-player-image-v1.vercel.app/outfit-image?uid=${uid}&key=Flash`;
     }
   </script>
 </body>
