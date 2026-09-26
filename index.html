@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Xen Shorif Info - Ultra 60FPS Mini App</title>
+  <title>Xen Shorif Info - Pro Mini App</title>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
@@ -102,14 +102,9 @@
       transition: transform 0.2s var(--ease-spring);
     }
 
-    .brand-icon:active {
-      transform: scale(0.92);
-    }
+    .brand-icon:active { transform: scale(0.92); }
 
-    .nav-actions {
-      display: flex;
-      gap: 10px;
-    }
+    .nav-actions { display: flex; gap: 10px; }
 
     .btn-icon {
       width: 42px;
@@ -128,11 +123,9 @@
       will-change: transform;
     }
 
-    .btn-icon:active {
-      transform: scale(0.90);
-    }
+    .btn-icon:active { transform: scale(0.90); }
 
-    /* 60FPS Dropdown */
+    /* Dropdown */
     .dropdown {
       position: absolute;
       top: 62px;
@@ -169,14 +162,8 @@
       transition: background 0.15s, transform 0.15s var(--ease-spring);
     }
 
-    .drop-item:active {
-      transform: scale(0.97);
-    }
-
-    .drop-item.active {
-      background: var(--item-bg);
-      color: var(--primary);
-    }
+    .drop-item:active { transform: scale(0.97); }
+    .drop-item.active { background: var(--item-bg); color: var(--primary); }
 
     /* Search Box */
     .search-card {
@@ -203,21 +190,9 @@
       color: var(--primary);
     }
 
-    .title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .title span {
-      color: #6366f1;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 18px;
-    }
+    .title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .title span { color: #6366f1; }
+    .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
 
     .input-box {
       width: 100%;
@@ -240,7 +215,6 @@
       transform: translateY(-1px);
     }
 
-    /* 60FPS Spring Button */
     .btn-search {
       width: 100%;
       padding: 16px;
@@ -270,13 +244,26 @@
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
 
-    .btn-search:disabled {
-      opacity: 0.75;
-      transform: none;
-      cursor: not-allowed;
-    }
+    .btn-search:disabled { opacity: 0.75; transform: none; cursor: not-allowed; }
 
-    /* Smooth Fade-in Results */
+    /* ============================================================== */
+    /* 🌟 PRO SKELETON SHIMMER LOADER (Matches 00:58 of Reference)   */
+    /* ============================================================== */
+    .skeleton-wrap { max-width: 480px; margin: 0 auto; display: none; }
+    .shimmer {
+      background: linear-gradient(90deg, var(--item-bg) 25%, rgba(148, 163, 184, 0.25) 50%, var(--item-bg) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 12px;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skel-header { height: 75px; margin-bottom: 14px; }
+    .skel-box { height: 70px; border-radius: 16px; }
+
+    /* Results Container */
     .container {
       max-width: 480px;
       margin: 0 auto;
@@ -316,12 +303,7 @@
       border-bottom: 1px dashed var(--item-border);
     }
 
-    .p-name {
-      font-size: 22px;
-      font-weight: 800;
-      margin-top: 4px;
-    }
-
+    .p-name { font-size: 22px; font-weight: 800; margin-top: 4px; }
     .p-uid {
       font-size: 12px;
       color: var(--muted);
@@ -334,126 +316,49 @@
       border-radius: 8px;
       transition: transform 0.2s var(--ease-spring);
     }
+    .p-uid:active { transform: scale(0.93); }
 
-    .p-uid:active {
-      transform: scale(0.93);
-    }
+    .p-badges { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+    .tag { font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 10px; }
 
-    .p-badges {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 12px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .grid-item { background: var(--item-bg); border: 1px solid var(--item-border); border-radius: 16px; padding: 13px; }
+    .g-lbl { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+    .g-val { font-size: 15px; font-weight: 800; color: var(--text); margin-top: 4px; }
 
-    .tag {
-      font-size: 12px;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 10px;
-    }
+    .bar-bg { width: 100%; height: 8px; background: var(--item-border); border-radius: 10px; margin-top: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; background: var(--primary-gradient); border-radius: 10px; width: 0%; transition: width 0.7s var(--ease-spring); }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
+    .pills-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .pill { font-size: 12px; font-weight: 700; background: var(--item-bg); border: 1px solid var(--item-border); padding: 6px 12px; border-radius: 10px; color: var(--primary); }
 
-    .grid-item {
-      background: var(--item-bg);
-      border: 1px solid var(--item-border);
-      border-radius: 16px;
-      padding: 13px;
-    }
+    .ep-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--item-bg); border: 1px solid var(--item-border); border-radius: 12px; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
+    .ep-owned { background: #dcfce7; color: #15803d; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
 
-    .g-lbl {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .img-box { width: 100%; border-radius: 16px; border: 1px solid var(--card-border); margin-top: 10px; display: block; }
 
-    .g-val {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--text);
-      margin-top: 4px;
-    }
-
-    .bar-bg {
-      width: 100%;
-      height: 8px;
-      background: var(--item-border);
-      border-radius: 10px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: var(--primary-gradient);
-      border-radius: 10px;
-      width: 0%;
-      transition: width 0.7s var(--ease-spring);
-    }
-
-    .pills-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .pill {
-      font-size: 12px;
-      font-weight: 700;
-      background: var(--item-bg);
-      border: 1px solid var(--item-border);
-      padding: 6px 12px;
-      border-radius: 10px;
-      color: var(--primary);
-    }
-
-    .ep-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 14px;
-      background: var(--item-bg);
-      border: 1px solid var(--item-border);
-      border-radius: 12px;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .ep-owned {
-      background: #dcfce7;
-      color: #15803d;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
-
-    .img-box {
-      width: 100%;
-      border-radius: 16px;
-      border: 1px solid var(--card-border);
-      margin-top: 10px;
-      display: block;
-    }
-
+    /* ============================================================== */
+    /* 🔗 2-LINE CLICKABLE FOOTER                                    */
+    /* ============================================================== */
     .footer {
       text-align: center;
       font-size: 12px;
       color: var(--muted);
-      margin: 30px 0 15px;
+      margin: 32px 0 16px;
+      line-height: 1.8;
       font-weight: 600;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      transition: opacity 0.2s;
+    }
+
+    .footer-link:hover {
+      text-decoration: underline;
+      opacity: 0.85;
     }
 
     /* Floating Toast */
@@ -476,10 +381,7 @@
       z-index: 9999;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body data-theme="light">
@@ -516,12 +418,24 @@
     <div class="title" id="mTitle">Xen Shorif Player Info<span>!</span></div>
     <div class="subtitle" id="mSub">Enter UID or Name — search Free Fire player instantly</div>
 
-    <!-- Completely Empty Input Box -->
     <input type="text" id="uidInput" class="input-box" placeholder="Enter UID or Name (e.g. 7703449332)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     
     <button class="btn-search" onclick="handleSearch()" id="btnSearch">
       <span id="btnText">🔍 Search</span>
     </button>
+  </div>
+
+  <!-- 🌟 PRO SKELETON LOADING SHIMMER -->
+  <div class="skeleton-wrap card" id="skeletonLoader">
+    <div class="shimmer skel-header"></div>
+    <div class="grid-2">
+      <div class="shimmer skel-box"></div>
+      <div class="shimmer skel-box"></div>
+      <div class="shimmer skel-box"></div>
+      <div class="shimmer skel-box"></div>
+      <div class="shimmer skel-box"></div>
+      <div class="shimmer skel-box"></div>
+    </div>
   </div>
 
   <!-- Results Container -->
@@ -627,7 +541,7 @@
       <img id="imgOutfit" class="img-box" alt="Outfit">
     </div>
 
-    <!-- 2. BAN CHECK VIEW -->
+    <!-- 2. BAN CHECK VIEW (FIXED REGION BD) -->
     <div id="view-ban" style="display: none;">
       <div class="card" style="text-align: center;">
         <div class="icon-badge" id="banIcon" style="font-size: 32px;">🛡️</div>
@@ -637,7 +551,7 @@
           <span class="tag" id="banBadge" style="font-size: 15px; padding: 8px 18px;">Checking...</span>
         </div>
         <div class="grid-2" style="margin-top: 20px;">
-          <div class="grid-item"><div class="g-lbl">Region</div><div class="g-val" id="banRegion">-</div></div>
+          <div class="grid-item"><div class="g-lbl">Region</div><div class="g-val" id="banRegion">BD</div></div>
           <div class="grid-item"><div class="g-lbl">Level</div><div class="g-val" id="banLevel">-</div></div>
         </div>
         <div id="banDetails" style="margin-top: 14px; font-size: 13px; color: var(--muted); display: none;"></div>
@@ -728,8 +642,14 @@
 
   </div>
 
+  <!-- 🌟 2-LINE CLICKABLE FOOTER -->
   <div class="footer">
-    Fan-made tool. Built by <b>@xen_shorif</b>
+    <div>
+      🤖 <b>Bot:</b> <a href="https://t.me/Shorif_ff_check_bot" target="_blank" class="footer-link">Shorif ff check bot (@Shorif_ff_check_bot)</a>
+    </div>
+    <div>
+      Fan-made tool. Built by <a href="https://t.me/xen_shorif" target="_blank" class="footer-link">@xen_shorif</a>
+    </div>
   </div>
 
   <script>
@@ -750,9 +670,7 @@
       const toast = document.getElementById('toast');
       toast.innerHTML = `<span>${message}</span>`;
       toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2500);
+      setTimeout(() => { toast.classList.remove('show'); }, 2500);
     }
 
     let activeMode = 'player';
@@ -853,6 +771,7 @@
       const btn = document.getElementById('btnSearch');
       const btnText = document.getElementById('btnText');
       const container = document.getElementById('container');
+      const skeleton = document.getElementById('skeletonLoader');
 
       if (!input) {
         showToast("⚠️ Please enter UID or Name first!");
@@ -861,6 +780,8 @@
 
       btn.disabled = true;
       btnText.innerText = "⏳ Fetching...";
+      container.style.display = 'none';
+      skeleton.style.display = 'block';
 
       try {
         if (activeMode === 'ban') {
@@ -880,9 +801,11 @@
         } else {
           await runPlayerInfo(input);
         }
+        skeleton.style.display = 'none';
         container.style.display = 'block';
         showToast("✅ Loaded Successfully!");
       } catch (err) {
+        skeleton.style.display = 'none';
         showToast("❌ Error: " + err.message);
       } finally {
         btn.disabled = false;
@@ -890,7 +813,7 @@
       }
     }
 
-    // 1. BAN CHECK
+    // 1. BAN CHECK (SG FILTERED OUT -> BD)
     async function runBanCheck(target) {
       switchView('ban');
       const res = await fetch(`https://flash-player-info-v1.vercel.app/bancheck?uid=${encodeURIComponent(target)}`);
@@ -898,7 +821,11 @@
 
       document.getElementById('banNick').innerText = data.Nickname || target;
       document.getElementById('banUid').innerText = `UID: ${data.UID || target}`;
-      document.getElementById('banRegion').innerText = data.Region || 'BD';
+      
+      // SG ফিল্টার করে সরাসরি BD সেট করা হয়েছে
+      let reg = data.Region || 'BD';
+      if (reg === 'SG') reg = 'BD';
+      document.getElementById('banRegion').innerText = reg;
       document.getElementById('banLevel').innerText = data.level || 'N/A';
 
       const badge = document.getElementById('banBadge');
