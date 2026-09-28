@@ -867,16 +867,55 @@
       document.getElementById('itemTitle').innerText = `Item ID: ${itemId}`;
     }
 
+    // ==========================================================
+    // 🔌 PLAYER INFO API (নিজের API — শুধু UID সাপোর্ট করে; নাম দিয়ে সার্চ পুরনো API তে যাবে)
+    // ==========================================================
+    const NEW_API_URL = 'https://xen-shorif-info-src.vercel.app/player-info';
+    const OLD_API_URL = 'https://flash-player-info-v1.vercel.app/player-info';
+
+    function lowerKeys(o) {
+      if (Array.isArray(o)) return o.map(lowerKeys);
+      if (o && typeof o === 'object') {
+        const r = {};
+        for (const k in o) r[k.toLowerCase()] = lowerKeys(o[k]);
+        return r;
+      }
+      return o;
+    }
+
+    // নতুন API র (camelCase) রেসপন্সকে পুরনো key স্টাইলে রূপান্তর
+    function compatPlayerInfo(raw) {
+      const d = lowerKeys(raw);
+      const b = d.basicinfo;
+      if (!b) return d;
+      const prime = b.primeinfo || {};
+      b.primeInfo = { primeLevel: prime.primelevel || 0 };
+      // নতুন API তে র‍্যাঙ্কের নাম নেই, শুধু কোড নম্বর আছে
+      if (b.br_rank === undefined) b.br_rank = b.rank;
+      if (b.cs_rank === undefined) b.cs_rank = b.csrank;
+      if (b.weaponskinshowsName === undefined) b.weaponskinshowsName = (b.weaponskinshows || []).map(String);
+      const pet = d.petinfo || {};
+      if (pet.idName === undefined) pet.idName = pet.name;
+      if (pet.selectedSkillName === undefined) pet.selectedSkillName = pet.selectedskillid;
+      if (pet.skinName === undefined) pet.skinName = pet.skinid;
+      d.petinfo = pet;
+      return d;
+    }
+
+    async function getPlayerInfo(target) {
+      if (/^\d+$/.test(target)) {
+        const res = await fetch(`${NEW_API_URL}?uid=${encodeURIComponent(target)}`);
+        return compatPlayerInfo(await res.json());
+      }
+      const res = await fetch(`${OLD_API_URL}?name=${encodeURIComponent(target)}`);
+      return await res.json();
+    }
+
     // 3. GUILD INFO
     async function runGuildCheck(target) {
       switchView('guild');
       const isNum = /^\d+$/.test(target);
-      const url = isNum 
-        ? `https://flash-player-info-v1.vercel.app/player-info?uid=${encodeURIComponent(target)}`
-        : `https://flash-player-info-v1.vercel.app/player-info?name=${encodeURIComponent(target)}`;
-      
-      const res = await fetch(url);
-      const data = await res.json();
+      const data = await getPlayerInfo(target);
       const clan = data.clanbasicinfo || {};
       const capt = data.captainbasicinfo || {};
 
@@ -921,12 +960,7 @@
     async function runLevelCheck(target) {
       switchView('level');
       const isNum = /^\d+$/.test(target);
-      const url = isNum 
-        ? `https://flash-player-info-v1.vercel.app/player-info?uid=${encodeURIComponent(target)}`
-        : `https://flash-player-info-v1.vercel.app/player-info?name=${encodeURIComponent(target)}`;
-      
-      const res = await fetch(url);
-      const data = await res.json();
+      const data = await getPlayerInfo(target);
       const b = data.basicinfo || {};
 
       document.getElementById('lvlName').innerText = b.nickname || 'N/A';
@@ -957,12 +991,7 @@
     async function runPlayerInfo(target) {
       switchView('player');
       const isNum = /^\d+$/.test(target);
-      const url = isNum 
-        ? `https://flash-player-info-v1.vercel.app/player-info?uid=${encodeURIComponent(target)}`
-        : `https://flash-player-info-v1.vercel.app/player-info?name=${encodeURIComponent(target)}`;
-
-      const res = await fetch(url);
-      const data = await res.json();
+      const data = await getPlayerInfo(target);
       const b = data.basicinfo;
 
       if (!b) throw new Error("Player data not found!");
