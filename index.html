@@ -72,7 +72,7 @@ input:focus{border-color:var(--pr)}
     <div class="badge" id="mIcon">⚡</div>
     <div class="title" id="mTitle">Player Info</div>
     <div class="sub" id="mSub"></div>
-    <input id="q" inputmode="numeric" autocomplete="off" placeholder="Enter UID (e.g. 11978363054)" onkeydown="if(event.key==='Enter')run()">
+    <input id="q" inputmode="numeric" autocomplete="off" placeholder="Enter UID (e.g. 7703449332)" onkeydown="if(event.key==='Enter')run()">
     <button class="go" id="goBtn" onclick="run()">🔍 Search</button>
   </div>
 
@@ -90,7 +90,7 @@ const API = "https://xen-shorif-info-src.vercel.app";
 const tg = window.Telegram && Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); if (tg.colorScheme === 'dark') document.body.dataset.theme = 'dark'; }
 const MODES = {
-  player:{i:"👤",t:"Player Info",s:"Full profile, rank, guild, pet & loadout",ph:"Enter UID (e.g. 11978363054)"},
+  player:{i:"👤",t:"Player Info",s:"Full profile, rank, guild, pet & loadout",ph:"Enter UID (e.g. 7703449332)"},
   ban:{i:"🛡️",t:"Ban Check",s:"Check account suspension status",ph:"Enter UID"},
   br:{i:"🏆",t:"BR Stats",s:"Solo • Duo • Squad (Ranked / Career)",ph:"Enter UID"},
   cs:{i:"⚔️",t:"CS Stats",s:"Clash Squad KDA, MVP & multi-kills",ph:"Enter UID"},
@@ -172,10 +172,12 @@ function rBan(d) {
 function seg() { return `<div class="seg">${['RANKED', 'CAREER'].map(s => `<b class="${s === season ? 'on' : ''}" onclick="season='${s}';haptic();run()">${s}</b>`).join('')}</div>`; }
 function rBR(d) {
   const m = (t, s) => { s = s || {}; return sec(t) + card(`<div class="g2" style="margin-top:0">${kv('Matches', n(s.games_played))}${kv('Wins', n(s.wins) + ' <small>(' + v(s.win_rate) + ')</small>')}${kv('Kills', n(s.kills))}${kv('K/D', v(s.kd_ratio), 'color:var(--pr)')}${kv('Deaths', n(s.deaths))}${kv('Best Kills', n(s.highest_kills))}${kv('Headshot', n(s.headshot_kills) + ' <small>(' + v(s.headshot_rate) + ')</small>')}${kv('Damage', n(s.damage))}</div>`); };
-  return seg() + card(`<div class="ph" style="border:0;padding:0"><div class="pn">🏆 ${v(d.nickname)}</div><div class="uid">${season} • UID ${v(d.uid)}</div></div>`) + m('👥 Squad', d.squad) + m('🤝 Duo', d.duo) + m('👤 Solo', d.solo);
+  const note = d.has_data === false ? card(`<div class="sub" style="margin:0;text-align:center">📭 এই মোডে কোনো ম্যাচ খেলা নেই (${season})</div>`) : '';
+  return seg() + card(`<div class="ph" style="border:0;padding:0"><div class="pn">🏆 ${v(d.nickname)}</div><div class="uid">${season} • UID ${v(d.uid)}</div></div>`) + note + m('👥 Squad', d.squad) + m('🤝 Duo', d.duo) + m('👤 Solo', d.solo);
 }
 function rCS(d) {
-  return seg() + card(`<div class="ph"><div class="pn">⚔️ ${v(d.nickname)}</div><div class="uid">${season} • UID ${v(d.uid)}</div></div>
+  const note = d.has_data === false ? card(`<div class="sub" style="margin:0;text-align:center">📭 এই মোডে কোনো ম্যাচ খেলা নেই (${season})</div>`) : '';
+  return seg() + note + card(`<div class="ph"><div class="pn">⚔️ ${v(d.nickname)}</div><div class="uid">${season} • UID ${v(d.uid)}</div></div>
     <div class="g2">${kv('Matches', n(d.matches))}${kv('Wins', n(d.wins) + ' <small>(' + v(d.win_rate) + ')</small>')}${kv('Kills', n(d.kills))}${kv('Deaths', n(d.deaths))}${kv('Assists', n(d.assists))}${kv('K/D', v(d.kd_ratio))}${kv('Official KDA', v(d.official_kda), 'color:var(--pr)')}${kv('Headshot', n(d.headshot_kills) + ' <small>(' + v(d.headshot_rate) + ')</small>')}${kv('MVP', n(d.mvp))}${kv('Damage', n(d.damage))}${kv('Double Kills', n(d.double_kills))}${kv('Triple Kills', n(d.triple_kills))}${kv('Quadra Kills', n(d.quadra_kills), 'color:var(--gold-t)')}</div>`);
 }
 function rGuild(d) {
