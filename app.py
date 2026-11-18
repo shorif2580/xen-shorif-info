@@ -11,7 +11,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 app = Flask(__name__)
 
-INFO_API = "https://xen-shorif-info-src.vercel.app/info?uid={uid}"
+INFO_API = "https://xen-shorif-info-src.vercel.app/player-info?uid={uid}"
 ICON_API = "https://iconapi.wasmer.app/{}"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
